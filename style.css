@@ -1,5 +1,5 @@
 *{
-    --font-size: 25px;
+    --font-size: 20px;
     --border: solid white 1px;
 }
 body{
@@ -16,6 +16,7 @@ body{
     display: flex;
     align-items: center;
     padding-left: 30px;
+    font-size: 25px;
 }
 #container{
     display: flex;
@@ -27,7 +28,7 @@ body{
     border-top: none;
     height: 70px;
     display: grid;
-    grid-template-columns: 150px 1fr;
+    grid-template-columns: 230px 1fr;
 }
 .slot div{
     padding-left: 10px;
@@ -35,6 +36,7 @@ body{
     display: flex;
     align-items: flex-end;
     border-right: var(--border);
+    overflow-x: auto;
 }
 .slot input{
     color: white;
