@@ -70,7 +70,7 @@ function update_html(skip){
         if(base.name+'_input' == skip) continue
         document.getElementById(base.name+'_input').value = base.get_string()
         if(base.int >= 2) document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
-            let input = eval(event.target.value)
+            let input = event.target.value
             let b = parseInt(event.target.getAttribute('data-int'))
             // todo : add error handeling here
             console.log('input:', input, 'base', b)
