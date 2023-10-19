@@ -11,28 +11,36 @@ let bases = [
         name: 'binary',
         int: 2,
         get_string: () => {
-            return digits_to_text(base_convert(int_to_digits(global_int), 10, 2))
+            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 2))
+            console.log('base 2 set', text)
+            return text
         }
     },
     {
         name: 'octal',
         int: 8,
         get_string: () => {
-            return digits_to_text(base_convert(int_to_digits(global_int), 10, 8))
+            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 8))
+            console.log('base 8 set', text)
+            return text
         }
     },
     {
         name: 'decimal',
         int: 10,
         get_string: () => {
-            return digits_to_text(base_convert(int_to_digits(global_int), 10, 10))
+            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 10))
+            console.log('base 10 set', text)
+            return text
         }
     },
     {
         name: 'hexadecimal',
         int: 16,
         get_string: () => {
-            return digits_to_text(base_convert(int_to_digits(global_int), 10, 16))
+            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 16))
+            console.log('base 16 set', text)
+            return text
         }
     },
     /*{
@@ -57,16 +65,20 @@ for(let base of bases){
 
 function update_html(skip){
     for(let base of bases){
+        if(base.name+'_input' == skip) continue
         document.getElementById(base.name+'_input').value = base.get_string()
-
-        if(base.int != 0) document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
+        if(base.int >= 2) document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
             let input = event.target.value
             let b = parseInt(event.target.getAttribute('data-int'))
-            global_int = to_decimal(text_to_digits(input), b)
-
-            update_html(event.target)
+            console.log('input:', input, 'base', b)
+            global_int = to_decimal_int(text_to_digits(input), b)
+            console.log('global int set', global_int)
+            console.log('--html called--')
+            update_html(event.target.id)
         })
     }
+    console.log('--html updated--')
+    console.log('')
 }
 
 update_html(0)
