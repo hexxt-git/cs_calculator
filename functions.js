@@ -41,3 +41,14 @@ function base_convert(digits, base1, base2){
     console.log('base', base2, 'success', new_digits)
     return new_digits
 }
+
+function binary_to_gray(digits){
+    let new_digits = []
+    for(let i = 0 ; i < digits.length ; i++){
+        if(digits[i] == digits[i+1]) new_digits.push(0)
+        else new_digits.push(1)
+    }
+    let text = digits_to_text(new_digits)
+    console.log('gray code success', text)
+    return new_digits
+}

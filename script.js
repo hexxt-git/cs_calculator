@@ -43,13 +43,15 @@ let bases = [
             return text
         }
     },
-    /*{
+    {
         name: 'gray_code',
         int: 0,
         get_string: () => {
-            return 0
+            let text = digits_to_text(binary_to_gray(base_convert(int_to_digits(global_int), 10, 2)))
+            console.log('gray code set', text)
+            return text
         }
-    }*/
+    }
 ]
 
 html_container.innerHTML = ''
@@ -70,6 +72,7 @@ function update_html(skip){
         if(base.int >= 2) document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
             let input = event.target.value
             let b = parseInt(event.target.getAttribute('data-int'))
+            // todo : add error handeling here
             console.log('input:', input, 'base', b)
             global_int = to_decimal_int(text_to_digits(input), b)
             console.log('global int set', global_int)
