@@ -6,6 +6,7 @@ setInterval(()=>{
 
 let html_container = document.getElementById('container')
 let global_int = 0
+let error = false
 let bases = [
     {
         name: 'binary',
@@ -55,6 +56,7 @@ let bases = [
 ]
 
 html_container.innerHTML = ''
+
 for(let base of bases){
     let child_html = `
         <div class="slot" id="${base.name}_div">
@@ -65,23 +67,48 @@ for(let base of bases){
     html_container.innerHTML += child_html
 }
 
+for(let base of bases){
+    if(base.int >= 2) document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
+        let input = event.target.value
+        let b = parseInt(event.target.getAttribute('data-int'))
+        error = input.split('').some((digit)=>{
+            let index = all_digits.indexOf(digit.toUpperCase()) 
+            return index < 0 || index > b
+        })
+        if(error) console.error('input error:', input, 'base', b)
+        else{
+            error = false
+            console.log('%c --input: '+input+' base '+b, 'color: #8BF')
+            global_int = to_decimal_int(text_to_digits(input), b)
+            console.log('global int set', global_int)
+            console.log('--html called--')
+        }
+        update_html(event.target.id)
+    })
+    if(base.name == 'gray_code') document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
+        let input = event.target.value
+        error = input.split('').some((digit)=>{
+            return digit != 0 && digit != 1
+        })
+        if(error) console.error('input error:', input, 'gray code')
+        else{
+            console.log('%c --input: '+input+ ' gray code', 'color: #8BF')
+            global_int = to_decimal_int(gray_to_binary(text_to_digits(input)), 2)
+            console.log('global int set', global_int)
+            console.log('--html called--')
+        }
+        update_html(event.target.id)
+    })
+}
+
 function update_html(skip){
     for(let base of bases){
         if(base.name+'_input' == skip) continue
         document.getElementById(base.name+'_input').value = base.get_string()
-        if(base.int >= 2) document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
-            let input = event.target.value
-            let b = parseInt(event.target.getAttribute('data-int'))
-            // todo : add error handeling here
-            console.log('input:', input, 'base', b)
-            global_int = to_decimal_int(text_to_digits(input), b)
-            console.log('global int set', global_int)
-            console.log('--html called--')
-            update_html(event.target.id)
-        })
     }
-    console.log('--html updated--')
-    console.log('')
+    if(error) document.getElementById('error').style.opacity = '100%'
+    if(!error) document.getElementById('error').style.opacity = '0%'
+    console.log('%c  --html updated-- ', 'color: #3C8')
 }
 
 update_html(0)

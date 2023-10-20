@@ -49,6 +49,16 @@ function binary_to_gray(digits){
         else new_digits.push(1)
     }
     let text = digits_to_text(new_digits)
-    console.log('gray code success', text)
+    console.log('binary to gray success', text)
+    return new_digits
+}
+function gray_to_binary(digits){
+    let new_digits = []
+    for(let i = 0 ; i < digits.length ; i++){
+        if(digits[i] == digits[i+1]) new_digits.push(0)
+        else new_digits.push(1)
+    }
+    let text = digits_to_text(new_digits)
+    console.log('gray to binary success', text)
     return new_digits
 }
