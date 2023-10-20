@@ -52,6 +52,15 @@ let bases = [
             console.log('gray code set', text)
             return text
         }
+    },
+    {
+        name: 'binary_coded_decimal - BCD',
+        int: 0,
+        get_string: () => {
+            let text = digits_to_text(decimal_to_bcd(int_to_digits(global_int)))
+            console.log('binary code decimal set', text)
+            return text
+        }
     }
 ]
 
@@ -73,7 +82,7 @@ for(let base of bases){
         let b = parseInt(event.target.getAttribute('data-int'))
         error = input.split('').some((digit)=>{
             let index = all_digits.indexOf(digit.toUpperCase()) 
-            return index < 0 || index > b
+            return index < 0 || index >= b
         })
         if(error) console.error('input error:', input, 'base', b)
         else{
@@ -94,6 +103,22 @@ for(let base of bases){
         else{
             console.log('%c --input: '+input+ ' gray code', 'color: #8BF')
             global_int = to_decimal_int(gray_to_binary(text_to_digits(input)), 2)
+            console.log('global int set', global_int)
+            console.log('--html called--')
+        }
+        update_html(event.target.id)
+    })
+    if(base.name == 'binary_coded_decimal - BCD') document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
+        let input = event.target.value
+        input = input.replaceAll(' ', '')
+        error = input.split('').some((digit)=>{
+            return digit != 0 && digit != 1
+        })
+        error = error || (input.length % 4 != 0)
+        if(error) console.error('input error:', input, 'binary_coded_decimal - BCD')
+        else{
+            console.log('%c --input: '+input+ ' binary_coded_decimal - BCD', 'color: #8BF')
+            global_int = to_decimal_int(bcd_to_decimal(text_to_digits(input).reverse()), 10)
             console.log('global int set', global_int)
             console.log('--html called--')
         }

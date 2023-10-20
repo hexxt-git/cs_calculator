@@ -1,5 +1,5 @@
 *{
-    --font-size: 20px;
+    --font-size: 18px;
     --border: solid white 1px;
 }
 body{
@@ -52,7 +52,7 @@ body{
     border-top: none;
     height: 70px;
     display: grid;
-    grid-template-columns: 230px 1fr;
+    grid-template-columns: 240px 1fr;
 }
 .slot div{
     padding-left: 10px;

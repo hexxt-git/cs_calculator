@@ -62,3 +62,32 @@ function gray_to_binary(digits){
     console.log('gray to binary success', text)
     return new_digits
 }
+
+function decimal_to_bcd(digits){ // binary coded decimal
+    let new_digits = []
+    for(let i = 0 ; i < digits.length ; i++){
+        let digit = base_convert([digits[i]], 10, 2)
+        digit = [
+            digit[0] || 0,
+            digit[1] || 0,
+            digit[2] || 0,
+            digit[3] || 0,
+        ]
+        new_digits.push(...digit)
+    }
+    let text = digits_to_text(new_digits)
+    console.log('decimal to binary coded decimal success', text)
+    return new_digits
+}
+function bcd_to_decimal(digits){
+    let new_digits = []
+    for(let i = 0 ; i < digits.length ; i += 4){
+        let digit = [digits[i+3], digits[i+2], digits[i+1], digits[i+0]]
+        digit = base_convert(digit, 2, 10)
+        if(digit.length == 0) digit = [0]
+        new_digits.unshift(...digit)
+    }
+    let text = digits_to_text(new_digits)
+    console.log('binary coded decimal to decimal success', text)
+    return new_digits
+}
