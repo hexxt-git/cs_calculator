@@ -45,6 +45,15 @@ let bases = [
         }
     },
     {
+        name: 'my_base',
+        int: 20,
+        get_string: () => {
+            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 20))
+            console.log('base 20 set', text)
+            return text
+        }
+    },
+    {
         name: 'gray_code',
         int: 0,
         get_string: () => {
