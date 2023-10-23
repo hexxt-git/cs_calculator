@@ -45,15 +45,6 @@ let bases = [
         }
     },
     {
-        name: 'my_base',
-        int: 20,
-        get_string: () => {
-            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 20))
-            console.log('base 20 set', text)
-            return text
-        }
-    },
-    {
         name: 'gray_code',
         int: 0,
         get_string: () => {
@@ -76,18 +67,19 @@ let bases = [
 html_container.innerHTML = ''
 
 for(let base of bases){
-    let child_html = `
+    let new_element = document.createElement("div")
+    new_element.innerHTML = `
         <div class="slot" id="${base.name}_div">
             <div>${base.name}${base.int != 0 ? ' - base_'+base.int : ''}:</div>
             <input type="text" value="${base.get_string()}" id="${base.name}_input" data-int="${base.int}"></input>
         </div>
     `
-    html_container.innerHTML += child_html
+    html_container.appendChild(new_element)
 }
 
 for(let base of bases){
     if(base.int >= 2) document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
-        let input = event.target.value
+        let input = event.target.value.replaceAll(" ", "")
         let b = parseInt(event.target.getAttribute('data-int'))
         error = input.split('').some((digit)=>{
             let index = all_digits.indexOf(digit.toUpperCase()) 
@@ -104,7 +96,7 @@ for(let base of bases){
         update_html(event.target.id)
     })
     if(base.name == 'gray_code') document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
-        let input = event.target.value
+        let input = event.target.value.replaceAll(" ", "")
         error = input.split('').some((digit)=>{
             return digit != 0 && digit != 1
         })
@@ -118,8 +110,7 @@ for(let base of bases){
         update_html(event.target.id)
     })
     if(base.name == 'binary_coded_decimal - BCD') document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
-        let input = event.target.value
-        input = input.replaceAll(' ', '')
+        let input = event.target.value.replaceAll(" ", "")
         error = input.split('').some((digit)=>{
             return digit != 0 && digit != 1
         })
@@ -143,6 +134,55 @@ function update_html(skip){
     if(error) document.getElementById('error').style.opacity = '100%'
     if(!error) document.getElementById('error').style.opacity = '0%'
     console.log('%c  --html updated-- ', 'color: #3C8')
+    console.log('')
 }
 
 update_html(0)
+
+
+
+function add_n_base(n){
+    if(typeof(n) != 'number') return 1
+    bases.push({
+        name: 'base_' + n,
+        int: n,
+        get_string: () => {
+            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, n))
+            console.log('base n set', text)
+            return text
+        }
+    })
+    
+    let new_element = document.createElement("div")
+    new_element.innerHTML = `
+        <div class="slot" id="base_${n}_div">
+            <div>base_${n}:</div>
+            <input type="text" value="0" id="base_${n}_input" data-int="${n}"></input>
+        </div>
+    `
+    html_container.appendChild(new_element)
+
+    document.getElementById('base_'+n+'_input').addEventListener('input', (event)=>{
+        let input = event.target.value.replaceAll(" ", "")
+        let b = parseInt(event.target.getAttribute('data-int'))
+        error = input.split('').some((digit)=>{
+            let index = all_digits.indexOf(digit.toUpperCase()) 
+            return index < 0 || index >= b
+        })
+        if(error) console.error('input error:', input, 'base', b)
+        else{
+            error = false
+            console.log('%c --input: '+input+' base '+b, 'color: #8BF')
+            global_int = to_decimal_int(text_to_digits(input), b)
+            console.log('global int set', global_int)
+            console.log('--html called--')
+        }
+        update_html(event.target.id)
+    })
+    return 0
+}
+
+document.getElementById("add").addEventListener("click", ()=>{
+    let n = parseInt(prompt("enter n:"))
+    add_n_base(n)
+})
