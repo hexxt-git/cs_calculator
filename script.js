@@ -179,10 +179,14 @@ function add_n_base(n){
         }
         update_html(event.target.id)
     })
+    console.log('%c --new base ' + n + ' added--', 'color: #5F9')
+    update_html(0)
+
     return 0
 }
 
 document.getElementById("add").addEventListener("click", ()=>{
     let n = parseInt(prompt("enter n:"))
-    add_n_base(n)
+    if(1 < n && n < 37) add_n_base(n)
+    else console.error("invalid new base")
 })
