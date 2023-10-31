@@ -12,7 +12,7 @@ let bases = [
         name: 'binary',
         int: 2,
         get_string: () => {
-            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 2))
+            let text = digits_to_text(int_to_base_n(global_int, 2))
             console.log('base 2 set', text)
             return text
         }
@@ -21,7 +21,7 @@ let bases = [
         name: 'octal',
         int: 8,
         get_string: () => {
-            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 8))
+            let text = digits_to_text(int_to_base_n(global_int, 8))
             console.log('base 8 set', text)
             return text
         }
@@ -30,7 +30,7 @@ let bases = [
         name: 'decimal',
         int: 10,
         get_string: () => {
-            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 10))
+            let text = digits_to_text(int_to_base_n(global_int, 10))
             console.log('base 10 set', text)
             return text
         }
@@ -39,7 +39,7 @@ let bases = [
         name: 'hexadecimal',
         int: 16,
         get_string: () => {
-            let text = digits_to_text(base_convert(int_to_digits(global_int), 10, 16))
+            let text = digits_to_text(int_to_base_n(global_int, 16))
             console.log('base 16 set', text)
             return text
         }
@@ -48,7 +48,7 @@ let bases = [
         name: 'gray_code',
         int: 0,
         get_string: () => {
-            let text = digits_to_text(binary_to_gray(base_convert(int_to_digits(global_int), 10, 2)))
+            let text = digits_to_text(binary_to_gray(base_convert(int_to_digits(Math.floor(global_int)), 10, 2)))
             console.log('gray code set', text)
             return text
         }
@@ -57,7 +57,7 @@ let bases = [
         name: 'binary_coded_decimal - BCD',
         int: 0,
         get_string: () => {
-            let text = digits_to_text(decimal_to_bcd(int_to_digits(global_int)))
+            let text = digits_to_text(decimal_to_bcd(int_to_digits(Math.floor(global_int))))
             console.log('binary code decimal set', text)
             return text
         }
@@ -79,17 +79,24 @@ for(let base of bases){
 
 for(let base of bases){
     if(base.int >= 2) document.getElementById(base.name+'_input').addEventListener('input', (event)=>{
-        let input = event.target.value.replaceAll(" ", "")
+        let input = event.target.value.replaceAll(" ", "").split('.')
+        if(input.length == 1) input.push('0')
+        if(input[0] == '') input[0] = '0'
+        if(input.length > 2) error = true
+        input[1] = input[1].split('').reverse().join('')
         let b = parseInt(event.target.getAttribute('data-int'))
-        error = input.split('').some((digit)=>{
+        error = error || input[0].split('').some((digit)=>{
+            let index = all_digits.indexOf(digit.toUpperCase()) 
+            return index < 0 || index >= b
+        })
+        error = error || input[1].split('').some((digit)=>{
             let index = all_digits.indexOf(digit.toUpperCase()) 
             return index < 0 || index >= b
         })
         if(error) console.error('input error:', input, 'base', b)
         else{
-            error = false
-            console.log('%c --input: '+input+' base '+b, 'color: #8BF')
-            global_int = to_decimal_int(text_to_digits(input), b)
+            console.log('%c --input: '+input[0]+'.'+input[1]+' base '+b, 'color: #8BF')
+            global_int = to_decimal_int(text_to_digits(input[0]), b) + fraction_to_decimal_int(text_to_digits(input[1]), b)
             console.log('global int set', global_int)
             console.log('--html called--')
         }
@@ -135,6 +142,7 @@ function update_html(skip){
     if(!error) document.getElementById('error').style.opacity = '0%'
     console.log('%c  --html updated-- ', 'color: #3C8')
     console.log('')
+    error = false
 }
 
 update_html(0)

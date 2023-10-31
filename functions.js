@@ -1,4 +1,6 @@
-all_digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+all_digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ."
+
+let pr = 8 // precision
 
 function int_to_digits(int){
     let text = String(int)
@@ -26,6 +28,15 @@ function to_decimal_int(digits, base){
     //console.log('decimal success', decimal)
     return decimal
 }
+function fraction_to_decimal_int(digits, base){
+    if(typeof(digits) != 'object') return 0
+    let decimal = 0
+    for(let i in digits){
+        decimal += digits[i] * base ** (-i-1)
+    }
+    //console.log('decimal success', decimal)
+    return Math.floor(decimal * 10**pr) / 10**pr
+}
 
 function base_convert(digits, base1, base2){
     let old_div = to_decimal_int(digits, base1)
@@ -39,6 +50,33 @@ function base_convert(digits, base1, base2){
         new_digits.push(remainder)
     }
     console.log('base', base2, 'success', new_digits)
+    return new_digits
+}
+
+function int_to_base_n(int, base){
+    // natural part
+    old_div = Math.floor(int)
+    let new_digits = []
+    let i = 0
+    while(old_div > 0 && i < 64){
+        i++
+        let remainder = old_div % base
+        let div = (old_div - remainder) / base
+        old_div = div
+        new_digits.push(remainder)
+    }
+    let fraction = int - Math.floor(int)
+    fraction = Math.round(fraction * 10**pr) / 10**pr
+    if(fraction != 0) new_digits.unshift(36)
+    let fraction_digits = []
+    let j = 0
+    while(fraction > 0 && j < 6){
+        fraction *= base
+        fraction_digits.unshift(Math.floor(fraction))
+        fraction -= Math.floor(fraction)
+        j++
+    }
+    new_digits.unshift(...fraction_digits)
     return new_digits
 }
 
